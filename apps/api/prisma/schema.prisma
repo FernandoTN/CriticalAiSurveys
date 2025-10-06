@@ -1,0 +1,298 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String?  @unique
+  name      String?
+  role      UserRole @default(creator)
+  locale    String?  @default("en")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  surveys   Survey[]
+  exports   Export[]
+  reviews   ModerationFlag[]
+  sessions  Session[]
+
+  @@map("users")
+}
+
+model Organization {
+  id       String   @id @default(uuid())
+  name     String
+  slug     String   @unique
+  settings Json     @default("{}")
+  createdAt DateTime @default(now()) @map("created_at")
+  surveys  Survey[]
+
+  @@map("organizations")
+}
+
+model Survey {
+  id          String         @id @default(uuid())
+  orgId       String?        @map("org_id")
+  organization Organization?   @relation(fields: [orgId], references: [id])
+  createdById String?        @map("created_by")
+  creator     User?          @relation(fields: [createdById], references: [id])
+  title       String
+  description String?
+  slug        String         @unique
+  version     Int            @default(1)
+  status      SurveyStatus   @default(draft)
+  visibility  VisibilityType @default(public)
+  settings    Json           @default("{}")
+  publishedAt DateTime?      @map("published_at")
+  createdAt   DateTime       @default(now()) @map("created_at")
+  updatedAt   DateTime       @updatedAt @map("updated_at")
+  questions   SurveyQuestion[]
+  logic       SurveyLogic[]
+  sessions    Session[]
+  exports     Export[]
+  aggregates  Aggregate[]
+
+  @@map("surveys")
+}
+
+model SurveyQuestion {
+  id          String        @id @default(uuid())
+  surveyId    String        @map("survey_id")
+  survey      Survey        @relation(fields: [surveyId], references: [id], onDelete: Cascade)
+  type        QuestionType
+  title       String
+  description String?
+  options     Json?
+  validation  Json?
+  orderIndex  Int           @map("order_index")
+  createdAt   DateTime      @default(now()) @map("created_at")
+  responses   Response[]
+  sourceLogic SurveyLogic[] @relation("SourceQuestion")
+  targetLogic SurveyLogic[] @relation("TargetQuestion")
+  aggregates  Aggregate[]
+
+  @@map("survey_questions")
+}
+
+model SurveyLogic {
+  id               String         @id @default(uuid())
+  surveyId         String         @map("survey_id")
+  survey           Survey         @relation(fields: [surveyId], references: [id], onDelete: Cascade)
+  sourceQuestionId String?        @map("source_question_id")
+  sourceQuestion   SurveyQuestion? @relation("SourceQuestion", fields: [sourceQuestionId], references: [id])
+  targetQuestionId String?        @map("target_question_id")
+  targetQuestion   SurveyQuestion? @relation("TargetQuestion", fields: [targetQuestionId], references: [id])
+  condition        Json
+  createdAt        DateTime       @default(now()) @map("created_at")
+
+  @@map("survey_logic")
+}
+
+model Session {
+  id           String      @id @default(uuid())
+  surveyId     String?     @map("survey_id")
+  survey       Survey?     @relation(fields: [surveyId], references: [id])
+  userId       String?     @map("user_id")
+  user         User?       @relation(fields: [userId], references: [id])
+  sessionKey   String      @unique @map("session_key")
+  locale       String?     @default("en")
+  metadata     Json        @default("{}")
+  startedAt    DateTime    @default(now()) @map("started_at")
+  lastActiveAt DateTime    @default(now()) @map("last_active_at")
+  completedAt  DateTime?   @map("completed_at")
+  responses    Response[]
+  chats        AiChat[]
+  votes        Vote[]
+  consents     Consent[]
+
+  @@map("sessions")
+}
+
+model Response {
+  id           String         @id @default(uuid())
+  sessionId    String?        @map("session_id")
+  session      Session?       @relation(fields: [sessionId], references: [id])
+  questionId   String?        @map("question_id")
+  question     SurveyQuestion? @relation(fields: [questionId], references: [id])
+  value        Json
+  editedFromId String?        @map("edited_from_id")
+  editedFrom   Response?      @relation("ResponseHistory", fields: [editedFromId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  edits        Response[]     @relation("ResponseHistory")
+  createdAt    DateTime       @default(now()) @map("created_at")
+  updatedAt    DateTime       @updatedAt @map("updated_at")
+  votes        Vote[]
+
+  @@map("responses")
+}
+
+model AiChat {
+  id          String   @id @default(uuid())
+  sessionId   String?  @map("session_id")
+  session     Session? @relation(fields: [sessionId], references: [id])
+  persona     String
+  turnIndex   Int      @map("turn_index")
+  userMessage String   @map("user_message")
+  aiResponse  String   @map("ai_response")
+  tokensUsed  Int?     @map("tokens_used")
+  costCents   Int?     @map("cost_cents")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@map("ai_chats")
+}
+
+model Vote {
+  id               String   @id @default(uuid())
+  sessionId        String?  @map("session_id")
+  session          Session? @relation(fields: [sessionId], references: [id])
+  targetResponseId String?  @map("target_response_id")
+  targetResponse   Response? @relation(fields: [targetResponseId], references: [id])
+  voteType         VoteType @map("vote_type")
+  reason           String?
+  createdAt        DateTime @default(now()) @map("created_at")
+
+  @@unique([sessionId, targetResponseId, voteType])
+  @@map("votes")
+}
+
+model Aggregate {
+  id         String   @id @default(uuid())
+  surveyId   String?  @map("survey_id")
+  survey     Survey?  @relation(fields: [surveyId], references: [id])
+  questionId String?  @map("question_id")
+  question   SurveyQuestion? @relation(fields: [questionId], references: [id])
+  metricType String   @map("metric_type")
+  bucket     String?
+  value      Decimal
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  @@unique([surveyId, questionId, metricType, bucket])
+  @@map("aggregates")
+}
+
+model ModerationFlag {
+  id         String            @id @default(uuid())
+  targetType String            @map("target_type")
+  targetId   String            @map("target_id")
+  reason     String
+  severity   SeverityLevel
+  status     ModerationStatus  @default(pending)
+  reviewedById String?         @map("reviewed_by")
+  reviewedBy User?             @relation(fields: [reviewedById], references: [id])
+  reviewedAt DateTime?         @map("reviewed_at")
+  createdAt  DateTime          @default(now()) @map("created_at")
+
+  @@map("moderation_flags")
+}
+
+model Export {
+  id          String       @id @default(uuid())
+  surveyId    String?      @map("survey_id")
+  survey      Survey?      @relation(fields: [surveyId], references: [id])
+  createdById String?      @map("created_by")
+  createdBy   User?        @relation(fields: [createdById], references: [id])
+  format      ExportFormat @default(csv)
+  filters     Json         @default("{}")
+  status      ExportStatus @default(pending)
+  fileUrl     String?      @map("file_url")
+  expiresAt   DateTime?    @map("expires_at")
+  createdAt   DateTime     @default(now()) @map("created_at")
+
+  @@map("exports")
+}
+
+model AuditLog {
+  id         String   @id @default(uuid())
+  actorId    String?  @map("actor_id")
+  action     String
+  targetType String   @map("target_type")
+  targetId   String   @map("target_id")
+  metadata   Json     @default("{}")
+  ipAddress  String?  @map("ip_address")
+  userAgent  String?  @map("user_agent")
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  @@map("audit_log")
+}
+
+model Consent {
+  id            String   @id @default(uuid())
+  sessionId     String?  @map("session_id")
+  session       Session? @relation(fields: [sessionId], references: [id])
+  policyVersion String   @map("policy_version")
+  consentType   String   @map("consent_type")
+  granted       Boolean
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  @@map("consents")
+}
+
+enum UserRole {
+  admin
+  creator
+  moderator
+  analyst
+}
+
+enum SurveyStatus {
+  draft
+  published
+  closed
+  archived
+}
+
+enum VisibilityType {
+  public
+  unlisted
+  private
+  domain_restricted
+}
+
+enum QuestionType {
+  likert
+  multiple_choice
+  single_choice
+  free_text
+  nps
+  matrix
+}
+
+enum VoteType {
+  approve
+  disapprove
+  pass
+  quality
+}
+
+enum SeverityLevel {
+  low
+  medium
+  high
+  critical
+}
+
+enum ModerationStatus {
+  pending
+  approved
+  rejected
+  escalated
+}
+
+enum ExportFormat {
+  csv
+  json
+  xlsx
+}
+
+enum ExportStatus {
+  pending
+  processing
+  completed
+  failed
+}

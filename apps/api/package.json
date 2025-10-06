@@ -4,15 +4,27 @@
   "private": true,
   "main": "dist/main.js",
   "scripts": {
-    "dev": "echo 'API dev server started'",
-    "build": "echo 'API build complete'",
+    "dev": "ts-node-dev --respawn --transpile-only src/main.ts",
+    "build": "prisma generate && tsc",
+    "start": "node dist/main.js",
     "test": "echo 'API tests passed'",
-    "lint": "echo 'API linted'",
-    "db:migrate": "echo 'Database migration complete'",
-    "db:seed": "echo 'Database seeded'"
+    "lint": "eslint . --ext .ts",
+    "db:migrate": "prisma migrate dev",
+    "db:seed": "prisma db seed"
   },
   "dependencies": {
+    "@fastify/cors": "^9.0.1",
+    "@prisma/client": "^5.12.1",
+    "fastify": "^4.26.2"
   },
   "devDependencies": {
+    "@types/node": "^20.12.7",
+    "eslint": "^8.57.0",
+    "prisma": "^5.12.1",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.4.5"
+  },
+  "prisma": {
+    "seed": "ts-node-dev prisma/seed.ts"
   }
 }
