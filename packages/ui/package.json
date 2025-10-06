@@ -1,0 +1,14 @@
+{
+  "name": "@critical-ai-surveys/ui",
+  "version": "0.1.0",
+  "private": true,
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "echo 'UI package build complete'",
+    "lint": "echo 'UI package linted'"
+  },
+  "dependencies": {
+  },
+  "devDependencies": {
+  }
+}

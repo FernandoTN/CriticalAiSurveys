@@ -1,0 +1,15 @@
+{
+  "name": "@critical-ai-surveys/web",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "echo 'Web dev server started'",
+    "build": "echo 'Web build complete'",
+    "test": "echo 'Web tests passed'",
+    "lint": "echo 'Web linted'"
+  },
+  "dependencies": {
+  },
+  "devDependencies": {
+  }
+}

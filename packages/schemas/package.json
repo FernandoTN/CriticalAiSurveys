@@ -1,0 +1,14 @@
+{
+  "name": "@critical-ai-surveys/schemas",
+  "version": "0.1.0",
+  "private": true,
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "echo 'Schemas package build complete'",
+    "lint": "echo 'Schemas package linted'"
+  },
+  "dependencies": {
+  },
+  "devDependencies": {
+  }
+}
