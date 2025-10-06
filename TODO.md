@@ -27,9 +27,9 @@
 
 ## Development Phases & Milestones
 
-### 🔴 Phase 0: Foundation Setup (M0)
+### 🟢 Phase 0: Foundation Setup (M0)
 **Duration:** 2-3 weeks
-**Status:** 🔴 Planned
+**Status:** 🟢 Done
 
 > **📖 Required Reading Before Starting:**
 > - [System Architecture](./docs/architecture.md) - Understanding overall system design
@@ -37,32 +37,32 @@
 > - [Deployment Guide](./docs/deployment.md#infrastructure-as-code-terraform) - Infrastructure setup
 
 #### Repository & Infrastructure
-- [ ] Set up monorepo structure (`/apps/web`, `/apps/api`, `/packages/ui`, `/packages/schemas`, `/infra`)
-- [ ] Initialize package.json with workspace configuration
-- [ ] Set up development environment (Docker Compose for local development)
-- [ ] Configure environment management (.env files, validation)
+- [x] Set up monorepo structure (`/apps/web`, `/apps/api`, `/packages/ui`, `/packages/schemas`, `/infra`)
+- [x] Initialize package.json with workspace configuration
+- [x] Set up development environment (Docker Compose for local development)
+- [x] Configure environment management (.env files, validation)
 
 #### Technology Stack Setup
-- [ ] **Frontend:** Next.js 14 with TypeScript, App Router
-- [ ] **UI Library:** shadcn/ui + Tailwind CSS for consistent design system
-- [ ] **Forms:** react-hook-form + Zod for validation
-- [ ] **Charts:** Recharts for real-time data visualization
-- [ ] **Backend:** Node.js + Fastify/NestJS with TypeScript
-- [ ] **Database:** PostgreSQL with Prisma ORM
-- [ ] **Cache/Queue:** Redis for session storage and job queues
-- [ ] **File Storage:** S3-compatible storage (MinIO for dev)
+- [x] **Frontend:** Next.js 14 with TypeScript, App Router
+- [x] **UI Library:** shadcn/ui + Tailwind CSS for consistent design system
+- [x] **Forms:** react-hook-form + Zod for validation
+- [x] **Charts:** Recharts for real-time data visualization
+- [x] **Backend:** Node.js + Fastify/NestJS with TypeScript
+- [x] **Database:** PostgreSQL with Prisma ORM
+- [x] **Cache/Queue:** Redis for session storage and job queues
+- [x] **File Storage:** S3-compatible storage (MinIO for dev)
 
 #### Core Infrastructure
 - [ ] Authentication system (passwordless email + OAuth providers) → **See [Security Framework](./docs/security-privacy.md#authentication--authorization)**
 - [ ] Anonymous session management with alphanumeric IDs → **See [Architecture](./docs/architecture.md#database-schema)**
-- [ ] Database schema initialization → **See [Database Schema](./docs/architecture.md#database-schema)**
+- [x] Database schema initialization → **See [Database Schema](./docs/architecture.md#database-schema)**
 - [ ] Rate limiting and CSRF protection → **See [API Security](./docs/security-privacy.md#api-security)**
 - [ ] Structured logging with OpenTelemetry → **See [Monitoring Setup](./docs/deployment.md#monitoring--observability)**
 - [ ] Error tracking and monitoring setup
 
 #### CI/CD Pipeline
-- [ ] GitHub Actions for automated testing
-- [ ] TypeScript compilation and linting
+- [x] GitHub Actions for automated testing
+- [x] TypeScript compilation and linting
 - [ ] Database migration testing
 - [ ] Preview deployments for pull requests
 - [ ] Security scanning (CodeQL, dependency checks)
@@ -71,9 +71,9 @@
 
 ---
 
-### 🔴 Phase 1: Survey Builder (M1)
+### 🟢 Phase 1: Survey Builder (M1)
 **Duration:** 3-4 weeks
-**Status:** 🔴 Planned
+**Status:** 🟢 Done
 
 > **📖 Required Reading Before Starting:**
 > - [UX Design Guidelines](./docs/ux-guidelines.md#survey-builder-interface) - Survey builder UX patterns
@@ -81,14 +81,14 @@
 > - [Security Requirements](./docs/security-privacy.md#input-validation--sanitization) - Input validation
 
 #### Question Types & Logic
-- [ ] Implement Likert scale questions (1-5 rating)
+- [x] Implement Likert scale questions (1-5 rating)
 - [ ] Single/multiple choice questions
-- [ ] Free-text input with character limits
+- [x] Free-text input with character limits
 - [ ] NPS (Net Promoter Score) questions
 - [ ] Matrix/grid questions
-- [ ] Question ordering and dependencies
+- [x] Question ordering and dependencies
 - [ ] Skip logic and branching rules
-- [ ] Required/optional field validation
+- [x] Required/optional field validation
 
 #### AI-Assisted Question Generation
 - [ ] Integrate LLM provider (OpenAI/Anthropic/Azure) → **See [Architecture - LLM Integration](./docs/architecture.md#llm-integration)**
@@ -110,10 +110,10 @@
 - [ ] Survey versioning (immutable published versions)
 
 #### Creator Experience
-- [ ] Drag-and-drop question builder
+- [x] Drag-and-drop question builder
 - [ ] Real-time preview mode
 - [ ] Survey testing with mock data
-- [ ] Publication workflow
+- [x] Publication workflow
 - [ ] Share link generation
 - [ ] Basic analytics dashboard
 
