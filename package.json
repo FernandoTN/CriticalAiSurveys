@@ -1,0 +1,22 @@
+{
+  "name": "critical-ai-surveys",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace @critical-ai-surveys/web",
+    "dev:web": "npm run dev --workspace @critical-ai-surveys/web",
+    "dev:api": "npm run dev --workspace @critical-ai-surveys/api",
+    "build": "npm run build --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "lint": "npm run lint --workspaces --if-present",
+    "db:migrate": "npm run db:migrate --workspace @critical-ai-surveys/api",
+    "db:seed": "npm run db:seed --workspace @critical-ai-surveys/api"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "prettier": "^3.0.0"
+  }
+}

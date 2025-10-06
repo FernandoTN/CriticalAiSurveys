@@ -1,0 +1,18 @@
+{
+  "name": "@critical-ai-surveys/api",
+  "version": "0.1.0",
+  "private": true,
+  "main": "dist/main.js",
+  "scripts": {
+    "dev": "echo 'API dev server started'",
+    "build": "echo 'API build complete'",
+    "test": "echo 'API tests passed'",
+    "lint": "echo 'API linted'",
+    "db:migrate": "echo 'Database migration complete'",
+    "db:seed": "echo 'Database seeded'"
+  },
+  "dependencies": {
+  },
+  "devDependencies": {
+  }
+}
