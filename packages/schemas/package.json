@@ -4,11 +4,14 @@
   "private": true,
   "main": "dist/index.js",
   "scripts": {
-    "build": "echo 'Schemas package build complete'",
-    "lint": "echo 'Schemas package linted'"
+    "build": "tsc",
+    "lint": "eslint . --ext .ts"
   },
   "dependencies": {
+    "zod": "^3.22.4"
   },
   "devDependencies": {
+    "typescript": "^5.4.5",
+    "eslint": "^8.57.0"
   }
 }
