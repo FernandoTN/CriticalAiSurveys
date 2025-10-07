@@ -59,3 +59,27 @@ export const updateSurveySchema = z.object({
 
 export type CreateSurveyInput = z.infer<typeof createSurveySchema>;
 export type UpdateSurveyInput = z.infer<typeof updateSurveySchema>;
+
+// Schema for creating an anonymous session
+export const createSessionSchema = z.object({
+  surveyId: z.string().uuid(),
+  locale: z.string().optional(),
+});
+
+export type CreateSessionInput = z.infer<typeof createSessionSchema>;
+
+// Schema for submitting a response
+export const submitResponseSchema = z.object({
+  questionId: z.string().uuid(),
+  sessionId: z.string().uuid(),
+  value: z.record(z.any()), // A generic object for now, can be refined
+});
+
+export type SubmitResponseInput = z.infer<typeof submitResponseSchema>;
+
+// Schema for updating a response
+export const updateResponseSchema = z.object({
+  value: z.record(z.any()),
+});
+
+export type UpdateResponseInput = z.infer<typeof updateResponseSchema>;

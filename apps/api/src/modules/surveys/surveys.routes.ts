@@ -8,6 +8,7 @@ export async function surveyRoutes(fastify: FastifyInstance) {
 
   fastify.post('/surveys', surveyController.createSurvey.bind(surveyController));
   fastify.get('/surveys/:id', surveyController.getSurveyById.bind(surveyController));
+  fastify.get('/surveys/slug/:slug', surveyController.getSurveyBySlug.bind(surveyController));
   fastify.patch('/surveys/:id', surveyController.updateSurvey.bind(surveyController));
   fastify.post(
     '/surveys/:id/publish',
