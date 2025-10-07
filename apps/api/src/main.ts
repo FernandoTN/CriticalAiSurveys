@@ -11,14 +11,21 @@ server.register(cors, {
 });
 
 import { surveyRoutes } from './modules/surveys/surveys.routes';
+import { sessionRoutes } from './modules/sessions/sessions.routes';
+import { responseRoutes } from './modules/responses/responses.routes';
 
 // Health check route
 server.get('/health', async (request, reply) => {
   return { status: 'ok' };
 });
 
-// Register survey routes
+import { chatRoutes } from './modules/chat/chat.routes';
+
+// Register API routes
 server.register(surveyRoutes, { prefix: '/api/v1' });
+server.register(sessionRoutes, { prefix: '/api/v1' });
+server.register(responseRoutes, { prefix: '/api/v1' });
+server.register(chatRoutes, { prefix: '/api/v1' });
 
 const start = async () => {
   try {

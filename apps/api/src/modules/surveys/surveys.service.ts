@@ -16,6 +16,19 @@ export class SurveyService {
     });
   }
 
+  async getSurveyBySlug(slug: string) {
+    return prisma.survey.findUnique({
+      where: { slug },
+      include: {
+        questions: {
+          orderBy: {
+            orderIndex: 'asc',
+          },
+        },
+      },
+    });
+  }
+
   async getSurveyById(surveyId: string) {
     return prisma.survey.findUnique({
       where: { id: surveyId },

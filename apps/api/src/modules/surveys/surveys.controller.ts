@@ -25,6 +25,14 @@ export class SurveyController {
     reply.send(survey);
   }
 
+  async getSurveyBySlug(request: FastifyRequest<{ Params: { slug: string } }>, reply: FastifyReply) {
+    const survey = await this.surveyService.getSurveyBySlug(request.params.slug);
+    if (!survey) {
+      return reply.code(404).send({ error: 'Survey not found' });
+    }
+    reply.send(survey);
+  }
+
   async updateSurvey(request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) {
     try {
       const validatedData = updateSurveySchema.parse(request.body);
