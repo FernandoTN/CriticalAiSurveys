@@ -96,23 +96,36 @@ model SurveyLogic {
 }
 
 model Session {
-  id           String      @id @default(uuid())
-  surveyId     String?     @map("survey_id")
-  survey       Survey?     @relation(fields: [surveyId], references: [id])
-  userId       String?     @map("user_id")
-  user         User?       @relation(fields: [userId], references: [id])
-  sessionKey   String      @unique @map("session_key")
-  locale       String?     @default("en")
-  metadata     Json        @default("{}")
-  startedAt    DateTime    @default(now()) @map("started_at")
-  lastActiveAt DateTime    @default(now()) @map("last_active_at")
-  completedAt  DateTime?   @map("completed_at")
-  responses    Response[]
-  chats        AiChat[]
-  votes        Vote[]
-  consents     Consent[]
+  id               String            @id @default(uuid())
+  surveyId         String?           @map("survey_id")
+  survey           Survey?           @relation(fields: [surveyId], references: [id])
+  userId           String?           @map("user_id")
+  user             User?             @relation(fields: [userId], references: [id])
+  sessionKey       String            @unique @map("session_key")
+  locale           String?           @default("en")
+  metadata         Json              @default("{}")
+  startedAt        DateTime          @default(now()) @map("started_at")
+  lastActiveAt     DateTime          @default(now()) @map("last_active_at")
+  completedAt      DateTime?         @map("completed_at")
+  responses        Response[]
+  chats            AiChat[]
+  votes            Vote[]
+  consents         Consent[]
+  platformFeedback PlatformFeedback?
 
   @@map("sessions")
+}
+
+model PlatformFeedback {
+  id                   String   @id @default(uuid())
+  sessionId            String   @unique
+  session              Session  @relation(fields: [sessionId], references: [id])
+  experienceRating     Int      @map("experience_rating")
+  aiConversationRating String?  @map("ai_conversation_rating")
+  suggestions          String?
+  createdAt            DateTime @default(now()) @map("created_at")
+
+  @@map("platform_feedback")
 }
 
 model Response {

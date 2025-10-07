@@ -15,4 +15,9 @@ export async function responseRoutes(fastify: FastifyInstance) {
     '/responses/:responseId',
     responseController.updateResponse.bind(responseController)
   );
+
+  fastify.get(
+    '/surveys/:surveyId/distribution/:questionId',
+    responseController.getOpinionDistribution.bind(responseController)
+  );
 }
