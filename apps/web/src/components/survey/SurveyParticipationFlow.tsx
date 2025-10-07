@@ -5,6 +5,10 @@ import { useEffect, useState } from "react";
 import { BaselineOpinionStep } from "./BaselineOpinionStep";
 import { ChatInterface } from "./ChatInterface";
 import { ReflectionStep } from "./ReflectionStep";
+import { OpinionDistributionStep } from "./OpinionDistributionStep";
+import { PeerEvaluationStep } from "./PeerEvaluationStep";
+import { FinalOpinionStep } from "./FinalOpinionStep";
+import { PlatformFeedbackStep } from "./PlatformFeedbackStep";
 
 interface SurveyParticipationFlowProps {
   survey: Survey & { questions: Question[] };
@@ -34,7 +38,7 @@ export function SurveyParticipationFlow({ survey }: SurveyParticipationFlowProps
   useEffect(() => {
     const createSession = async () => {
       try {
-        const res = await fetch('http://localhost:8000/api/v1/auth/session', {
+        const res = await fetch(`http://localhost:8000/api/v1/auth/session`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ surveyId: survey.id }),
@@ -60,9 +64,8 @@ export function SurveyParticipationFlow({ survey }: SurveyParticipationFlowProps
   const handleStepComplete = async (data?: any) => {
     if (currentStep === 1) {
       setBaselineResponse(data);
-      // Now, start the chat session
       try {
-        const res = await fetch('http://localhost:8000/api/v1/chat', {
+        const res = await fetch(`http://localhost:8000/api/v1/chat`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -95,38 +98,31 @@ export function SurveyParticipationFlow({ survey }: SurveyParticipationFlowProps
   }
 
   const renderCurrentStep = () => {
+    const baselineQuestion = survey.questions[0];
+    if (!baselineQuestion) return <p>Error: No questions found.</p>;
+
     switch (currentStep) {
       case 1:
-        const baselineQuestion = survey.questions[0];
-        if (!baselineQuestion) return <p>Error: No questions found.</p>;
-        return (
-          <BaselineOpinionStep
-            question={baselineQuestion}
-            sessionId={session.id}
-            onComplete={handleStepComplete}
-          />
-        );
+        return <BaselineOpinionStep question={baselineQuestion} sessionId={session.id} onComplete={handleStepComplete} />;
       case 2:
         if (!chatId) return <p>Starting chat...</p>;
-        return (
-          <ChatInterface
-            chatId={chatId}
-            onComplete={handleStepComplete}
-          />
-        );
+        return <ChatInterface chatId={chatId} onComplete={handleStepComplete} />;
       case 3:
         if (!baselineResponse) return <p>Error: No baseline response found.</p>;
-        return (
-          <ReflectionStep
-            originalResponse={baselineResponse}
-            onComplete={handleStepComplete}
-          />
-        );
+        return <ReflectionStep originalResponse={baselineResponse} onComplete={handleStepComplete} />;
+      case 4:
+        return <OpinionDistributionStep surveyId={survey.id} question={baselineQuestion} onComplete={handleStepComplete} />;
+      case 5:
+        return <PeerEvaluationStep surveyId={survey.id} sessionId={session.id} onComplete={handleStepComplete} />;
+      case 6:
+        return <FinalOpinionStep question={baselineQuestion} sessionId={session.id} onComplete={handleStepComplete} />;
+      case 7:
+        return <PlatformFeedbackStep sessionId={session.id} onComplete={handleStepComplete} />;
       default:
         return (
-          <div>
-            <p>Current Step: {currentStep}</p>
-            <p>Thank you for your participation!</p>
+          <div className="text-center p-8">
+            <h1 className="text-2xl font-bold">Thank you!</h1>
+            <p>Your participation has been recorded.</p>
           </div>
         );
     }

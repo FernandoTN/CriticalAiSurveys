@@ -30,4 +30,18 @@ export class ResponseController {
       reply.code(400).send({ error: 'Validation failed or resource not found', details: error });
     }
   }
+
+  async getOpinionDistribution(
+    request: FastifyRequest<{ Params: { questionId: string } }>,
+    reply: FastifyReply
+  ) {
+    try {
+      const distribution = await this.responseService.getOpinionDistribution(
+        request.params.questionId
+      );
+      reply.send(distribution);
+    } catch (error) {
+      reply.code(500).send({ error: 'Failed to get opinion distribution', details: error });
+    }
+  }
 }

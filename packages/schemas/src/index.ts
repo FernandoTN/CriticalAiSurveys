@@ -83,3 +83,27 @@ export const updateResponseSchema = z.object({
 });
 
 export type UpdateResponseInput = z.infer<typeof updateResponseSchema>;
+
+// Schema for submitting a vote
+export const submitVoteSchema = z.object({
+  responseId: z.string().uuid(),
+  sessionId: z.string().uuid(),
+  voteType: z.enum(['approve', 'disapprove', 'pass', 'quality']),
+  reason: z.string().max(500).optional(),
+});
+
+export * from './feedback';
+
+export type SubmitVoteInput = z.infer<typeof submitVoteSchema>;
+
+// Schema for submitting a final opinion
+export const submitFinalOpinionSchema = z.object({
+  questionId: z.string().uuid(),
+  sessionId: z.string().uuid(),
+  value: z.object({
+    likert: z.number().int(),
+    comment: z.string().max(500).optional(),
+  }),
+});
+
+export type SubmitFinalOpinionInput = z.infer<typeof submitFinalOpinionSchema>;
